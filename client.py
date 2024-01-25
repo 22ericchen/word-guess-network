@@ -10,14 +10,12 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((Host, Port))
 
 f = open('project1-words.txt', 'r')
-
 readF = f.read()
 wordList = readF.split()
 
 wordFound = False
 
-guess = random.choice(wordList)
-
+#Function to both send and recieve messages from the server
 def communicate(message):
     s.sendall(message.encode())
     message = s.recv(1024)
@@ -27,6 +25,7 @@ id = communicate(message1).decode()
 response_id = json.loads(id)
 newId = response_id.get("id")
 
+#global set of conditions learned from previous guesses
 notIncludedLetters = set()
 includedLetters = set()
 correctLetters = dict()
@@ -63,7 +62,10 @@ def guessWord(marks: list, word: str):
     pastGuesses.append(choice)
     return choice
 
+guess = random.choice(wordList)
+#guessing loop
 while wordFound != True:
+    #message template
     guess_message = '{"type": "guess", "id": "' + newId + '", "word":' + ' "' + guess + '"}\n'
     response = communicate(guess_message).decode()
 
